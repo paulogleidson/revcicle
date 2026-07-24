@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python -m venv \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\")",
+      "PowerShell(& \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -m pip install --upgrade pip)",
+      "PowerShell(& \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -m pip install -r \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\requirements.txt\")",
+      "PowerShell($env:DATABASE_URL='postgresql://u:p@localhost:5432/x'; & \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -c \"from app import main, models, schemas, database; print\\('OK', main.app.title\\)\")",
+      "PowerShell($env:DATABASE_URL='postgresql://u:p@localhost:5432/x'; & \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -c \"import sys, os; sys.path.insert\\(0, r'C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend'\\); from app import main, models, schemas, database; print\\('OK', main.app.title\\)\")",
+      "PowerShell($env:DATABASE_URL='postgresql://u:p@localhost:5432/x'; & \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\paulo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-paulo-OneDrive-Documentos-projetos-para-venda-app-revisaoestudos-saas\\\\6ebb13e6-0cca-4d53-beb7-ad665d18aea7\\\\scratchpad\\\\dump_ddl.py\")",
+      "PowerShell(& \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -m pip install pytest)",
+      "PowerShell(& \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -m pip install httpx 2>&1)",
+      "PowerShell(& \"C:\\\\Users\\\\paulo\\\\OneDrive\\\\Documentos\\\\projetos para venda\\\\app-revisaoestudos-saas\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\paulo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-paulo-OneDrive-Documentos-projetos-para-venda-app-revisaoestudos-saas\\\\6ebb13e6-0cca-4d53-beb7-ad665d18aea7\\\\scratchpad\\\\smoke_routes.py\")",
+      "Bash(rm -rf \"C:/Users/paulo/OneDrive/Documentos/projetos para venda/app-revisaoestudos-saas/frontend/dist\"; mkdir -p \"C:/Users/paulo/OneDrive/Documentos/projetos para venda/app-revisaoestudos-saas/.claude\")",
+      "Bash(find \"C:/Users/paulo/AppData/Local/Temp/claude\" -name \"*.png\" -o -name \"*.jpg\" -o -name \"*.jpeg\" 2>/dev/null | head -10; echo \"---\"; ls -la \"C:/Users/paulo/AppData/Local/Temp/claude/C--Users-paulo-OneDrive-Documentos-projetos-para-venda-app-revisaoestudos-saas/6ebb13e6-0cca-4d53-beb7-ad665d18aea7/scratchpad\" 2>/dev/null)",
+      "Bash(find \"C:/Users/paulo/AppData/Local/Temp\" -type f \\\\\\( -name \"*.png\" -o -name \"*.jpg\" \\\\\\) -mtime -1 2>/dev/null | head -20)",
+      "Bash(xargs -I {} stat -c \"%y %s %n\" {})",
+      "Bash(python -c \"from PIL import Image; im = Image.open\\(r'C:/Users/paulo/OneDrive/Documentos/projetos para venda/app-revisaoestudos-saas/frontend/public/logo.png'\\); print\\('size:', im.size\\); print\\('mode:', im.mode\\); print\\('has_alpha:', 'A' in im.mode\\); import numpy as np; a = np.array\\(im\\); print\\('shape:', a.shape\\); print\\('unique alpha \\(if any\\):', np.unique\\(a[...,3]\\)[:5] if a.shape[-1]==4 else 'no alpha'\\); print\\('unique R \\(samples\\):', np.unique\\(a[...,0]\\)[:10]\\)\")",
+      "Bash(\"C:/Users/paulo/OneDrive/Documentos/projetos para *)",
+      "Bash('C:/Users/paulo/OneDrive/Documentos/projetos para venda/app-revisaoestudos-saas/backend/venv/Scripts/python.exe' -c ' *)"
+    ]
+  }
+}

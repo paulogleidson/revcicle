@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Paleta base — tema escuro */
+  --color-app-bg: #141414;
+  --color-app-surface: #1e1e1e;
+  --color-app-raised: #262626;
+  --color-app-fg: #ececea;
+  --color-app-muted: #9a9a96;
+  --color-app-line: #2a2a2a;
+
+  /* Status: badges + botão de perigo */
+  --color-status-atrasado-bg: #4a1e1e;
+  --color-status-atrasado-fg: #e08a8a;
+  --color-status-hoje-bg: #4a3a1a;
+  --color-status-hoje-fg: #e0b96a;
+  --color-status-novo-bg: #2a3a45;
+  --color-status-novo-fg: #9cc2e0;
+}
+
+html {
+  background: var(--color-app-bg);
+  color: var(--color-app-fg);
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* Number inputs sem spinner — combinam mal com o tema escuro. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

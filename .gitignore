@@ -1,0 +1,17 @@
+# Rede de segurança — regras específicas ficam em backend/ e frontend/
+
+# Env (nunca commitar segredos)
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editores / IDEs
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo

@@ -95,13 +95,24 @@ def _decodificar_jwt(token: str) -> dict:
 
 
 def _obter_ou_criar_usuario(db: Session, supabase_uid: str, email: str | None) -> Usuario:
+    # 1. Match por supabase_uid — caminho normal, usuário já provisionado.
     usuario = db.query(Usuario).filter(Usuario.supabase_uid == supabase_uid).first()
     if usuario is not None:
         return usuario
 
-    # Primeira request desse usuário — provisiona linha local.
-    # Se o JWT não trouxer email (fluxos phone/anon), gera um placeholder
-    # pra não violar o NOT NULL / UNIQUE.
+    # 2. Match por email — linha existe mas sem UID (ou com UID antigo).
+    # Adota vinculando o UID atual em vez de INSERT e violar UNIQUE(email).
+    if email:
+        usuario = db.query(Usuario).filter(Usuario.email == email).first()
+        if usuario is not None:
+            usuario.supabase_uid = supabase_uid
+            db.commit()
+            db.refresh(usuario)
+            return usuario
+
+    # 3. Primeira request desse usuário — provisiona linha local.
+    # Sem email no JWT (fluxos phone/anon), usa placeholder pra não violar
+    # NOT NULL / UNIQUE.
     usuario = Usuario(
         supabase_uid=supabase_uid,
         email=email or f"{supabase_uid}@supabase.local",

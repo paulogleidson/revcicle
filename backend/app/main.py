@@ -20,7 +20,7 @@ app.include_router(conteudos.router)
 app.include_router(sessoes.router)
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health():
     try:
         with engine.connect() as conn:

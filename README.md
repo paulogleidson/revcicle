@@ -26,7 +26,7 @@ O Dashboard sempre mostra o que está pendente hoje (atrasados, do dia, e conte�
 - **Banco:** PostgreSQL (hospedado no Supabase)
 - **Frontend:** React + Vite + Tailwind CSS v4
 - **Auth:** Supabase Auth com validação de JWT **ES256 via JWKS** (chaves assimétricas)
-- **Deploy:** Vercel (frontend) + Railway (backend) + Supabase (banco + auth)
+- **Deploy:** Vercel (frontend) + Render (backend) + Supabase (banco + auth)
 
 ## Destaques técnicos
 
@@ -76,7 +76,14 @@ Também é preciso liberar `http://localhost:5173/**` em **Authentication → UR
 
 ## Deploy
 
-[LINK AQUI]
+App no ar em **[revcicle.vercel.app](https://revcicle.vercel.app)**.
+
+Arquitetura em produção:
+
+- **Frontend** — Vercel, deploy automático do `main` (Vite + assets estáticos servidos pela CDN da Vercel).
+- **Backend** — Render Free tier em `revcicle.onrender.com`, deploy automático do `main`. Como o Free hiberna com 15min sem tráfego, um monitor externo (UptimeRobot) pinga `/health` a cada 5min pra manter o container quente.
+- **Banco + Auth** — Supabase. Conexão via **Transaction Pooler** (porta 6543, IPv4) porque o Render Free só sai por IPv4 e a direct connection do Supabase é IPv6-only nos planos gratuitos.
+- **CORS** restringido no backend ao domínio da Vercel + `localhost:5173`; nada de `allow_origins=["*"]` em produção.
 
 ---
 

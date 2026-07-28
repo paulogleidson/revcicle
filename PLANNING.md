@@ -31,7 +31,9 @@
       (retorna `ConteudoRevisaoOut`s: conteúdos SEM sessão OU cuja última
       sessão tem `proxima_revisao <= hoje`; ambos em
       `backend/app/routers/sessoes.py`)
-- [ ] CORS configurado para aceitar domínio da Vercel
+- [x] CORS configurado para aceitar domínio da Vercel —
+      `allow_origins=["https://revcicle.vercel.app", "http://localhost:5173"]`
+      em `backend/app/main.py`. Sem `*` em produção.
 
 ## Frontend
 - [x] Tela de Login/Cadastro — `frontend/app/App.jsx`
@@ -75,10 +77,31 @@
   API (Meta Cloud) ou Twilio, não Telegram.
 
 ## Deploy
-- [ ] Backend no Railway
-- [ ] Frontend na Vercel
-- [ ] Banco no Supabase/Neon
-- [ ] Variáveis de ambiente configuradas em todos os serviços
+- [x] Backend no **Render** (troca de plano de Railway pra Render por Railway
+      não ter mais free tier permanente). Web service em
+      `https://revcicle.onrender.com`, plano Free. `backend/Procfile`,
+      `backend/runtime.txt` (python-3.11.6) e `backend/.env.example`
+      versionados. Auto-deploy do `main` ativado.
+- [x] Frontend na Vercel — `https://revcicle.vercel.app`, Root Directory
+      `frontend/`, preset Vite, 3 env vars (`VITE_SUPABASE_URL`,
+      `VITE_SUPABASE_ANON_KEY`, `VITE_API_URL=https://revcicle.onrender.com`).
+- [x] Banco no Supabase — schema aplicado, connection string via
+      **Transaction Pooler** (porta 6543, IPv4) pra funcionar com o Render Free.
+- [x] Variáveis de ambiente configuradas em todos os serviços — Render (4),
+      Vercel (3), Supabase (URL Configuration com `revcicle.vercel.app/**` em
+      Redirect URLs + Site URL).
+- [x] UptimeRobot pingando `/health` a cada 5min pra evitar cold start do
+      Render Free (que hiberna com 15min sem tráfego). Backend do FastAPI
+      teve que aceitar HEAD em `/health` (padrão do UptimeRobot free) —
+      `@app.api_route("/health", methods=["GET", "HEAD"])`.
+
+### Débito conhecido do deploy
+- Confirmação de email do Supabase usa serviço built-in (rate limit
+  ~2 emails/hora). Testamos Resend como SMTP mas o free deles só entrega
+  pra `pgleitaosamp@gmail.com` sem domínio verificado — não serve pra app
+  real. Solução definitiva: comprar domínio (R$5-40/ano) e verificar no
+  Resend. Enquanto isso, confirmar usuário manualmente em
+  Authentication → Users quando algum não receber o email.
 
 ## Backlog V2 (não fazer agora, só registrar)
 - [ ] Grade semanal (dia da semana → matéria)

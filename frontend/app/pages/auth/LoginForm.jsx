@@ -12,35 +12,62 @@ export default function LoginForm({ onEsqueciSenha }) {
   const [aviso, setAviso] = useState(null)
   const [enviando, setEnviando] = useState(false)
 
+  // Validação client-side compartilhada por Entrar e Cadastrar.
+  // Cadastrar é type="button" e pula o `required` dos inputs, então precisa
+  // dessa checagem manual pra não mandar strings vazias pro Supabase.
+  function validar() {
+    if (!email.trim() || !senha) {
+      setErro('Preencha email e senha.')
+      return false
+    }
+    if (senha.length < 6) {
+      setErro('A senha precisa ter pelo menos 6 caracteres.')
+      return false
+    }
+    return true
+  }
+
   async function entrar(e) {
     e.preventDefault()
     setErro(null)
     setAviso(null)
+    if (!validar()) return
     setEnviando(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: senha,
-    })
-    if (error) setErro(traduzirErroAuth(error.message))
-    setEnviando(false)
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: senha,
+      })
+      if (error) setErro(traduzirErroAuth(error.message))
+    } catch (e) {
+      setErro(traduzirErroAuth(e?.message))
+    } finally {
+      setEnviando(false)
+    }
   }
 
   async function cadastrar() {
     setErro(null)
     setAviso(null)
+    if (!validar()) return
     setEnviando(true)
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password: senha,
-    })
-    if (error) {
-      setErro(traduzirErroAuth(error.message))
-    } else if (!data.session) {
-      setAviso(
-        'Cadastro criado. Confira seu email pra confirmar antes de entrar.'
-      )
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: senha,
+      })
+      if (error) {
+        setErro(traduzirErroAuth(error.message))
+      } else if (!data.session) {
+        setAviso(
+          'Cadastro criado. Confira seu email pra confirmar antes de entrar.'
+        )
+      }
+    } catch (e) {
+      setErro(traduzirErroAuth(e?.message))
+    } finally {
+      setEnviando(false)
     }
-    setEnviando(false)
   }
 
   return (

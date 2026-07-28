@@ -69,7 +69,7 @@ function ShellHeader({ email, onSair, tela, setTela }) {
         </TabButton>
       </nav>
       <div className="flex items-center justify-end gap-3 text-sm text-app-muted">
-        <span className="truncate max-w-[200px]">{email}</span>
+        <span className="truncate max-w-[240px] sm:max-w-[220px]">{email}</span>
         <button
           type="button"
           onClick={onSair}

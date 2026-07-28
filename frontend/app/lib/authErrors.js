@@ -14,6 +14,14 @@ const TRADUCOES = [
   { match: /email address .* is invalid/i, pt: 'Email inválido.' },
   { match: /unable to validate email address/i, pt: 'Email inválido.' },
   { match: /signup( is)? (disabled|not allowed)/i, pt: 'Cadastros novos estão desativados no momento.' },
+  { match: /anonymous sign-?ins? (are )?disabled/i, pt: 'Preencha email e senha pra continuar.' },
+  { match: /missing email or phone/i, pt: 'Preencha email e senha pra continuar.' },
+  { match: /email( is)? required/i, pt: 'Preencha o email.' },
+  { match: /password( is)? required/i, pt: 'Preencha a senha.' },
+
+  // Envio de email (SMTP / provedor)
+  { match: /error sending (confirmation|recovery|magic link) email/i, pt: 'Não foi possível enviar o email agora. Tente de novo em alguns instantes.' },
+  { match: /smtp/i, pt: 'Não foi possível enviar o email agora. Tente de novo em alguns instantes.' },
 
   // Senha
   { match: /password should be at least (\d+) characters?/i, pt: (m) => `A senha precisa ter pelo menos ${m[1]} caracteres.` },
@@ -36,11 +44,18 @@ const TRADUCOES = [
   { match: /otp( is)? expired/i, pt: 'Link expirado. Peça um novo.' },
 ]
 
+const FALLBACK = 'Não foi possível concluir a operação. Tente de novo em alguns instantes.'
+
 export function traduzirErroAuth(mensagemOriginal) {
-  if (!mensagemOriginal) return 'Erro desconhecido.'
+  // Casos degenerados: undefined, string vazia, "{}" (erro serializado sem
+  // .message) — nada de útil pra mostrar, cai no fallback amigável.
+  if (!mensagemOriginal || typeof mensagemOriginal !== 'string') return FALLBACK
+  const msg = mensagemOriginal.trim()
+  if (!msg || msg === '{}' || msg === '[object Object]') return FALLBACK
+
   for (const { match, pt } of TRADUCOES) {
-    const m = mensagemOriginal.match(match)
+    const m = msg.match(match)
     if (m) return typeof pt === 'function' ? pt(m) : pt
   }
-  return mensagemOriginal
+  return msg
 }

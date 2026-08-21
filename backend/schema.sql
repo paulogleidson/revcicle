@@ -43,3 +43,12 @@ CREATE INDEX IF NOT EXISTS idx_sessoes_conteudo_id
 -- Para a query do Dashboard ("o que revisar hoje"): filtra por proxima_revisao <= hoje.
 CREATE INDEX IF NOT EXISTS idx_sessoes_proxima_revisao
     ON sessoes_revisao (proxima_revisao);
+
+-- Row Level Security — fecha o acesso via PostgREST/anon key.
+-- Todo o CRUD passa pelo FastAPI, que conecta via role postgres (BYPASSRLS),
+-- entao RLS ligada sem policies = frontend nao consegue bater direto no
+-- REST do Supabase e ler/escrever linhas de outros usuarios usando so a
+-- VITE_SUPABASE_ANON_KEY (que e publica, vai no bundle). Backend segue igual.
+ALTER TABLE usuarios         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conteudos        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sessoes_revisao  ENABLE ROW LEVEL SECURITY;

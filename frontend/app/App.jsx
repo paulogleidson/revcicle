@@ -4,6 +4,7 @@ import Logo from './components/Logo'
 import AjudaPage from './pages/AjudaPage'
 import ConteudosPage from './pages/ConteudosPage'
 import DashboardPage from './pages/DashboardPage'
+import DesempenhoPage from './pages/DesempenhoPage'
 import RegistrarRevisaoPage from './pages/RegistrarRevisaoPage'
 import LoginForm from './pages/auth/LoginForm'
 import RequestResetForm from './pages/auth/RequestResetForm'
@@ -48,7 +49,7 @@ function TabButton({ ativo, children, onClick }) {
 function ShellHeader({ email, onSair, tela, setTela }) {
   return (
     <header className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 mb-6 sm:mb-8">
-      <nav className="grid grid-cols-3 gap-2 sm:flex sm:gap-2">
+      <nav className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
         <TabButton
           ativo={tela === 'dashboard'}
           onClick={() => setTela('dashboard')}
@@ -60,6 +61,12 @@ function ShellHeader({ email, onSair, tela, setTela }) {
           onClick={() => setTela('conteudos')}
         >
           Meus Conteúdos
+        </TabButton>
+        <TabButton
+          ativo={tela === 'desempenho'}
+          onClick={() => setTela('desempenho')}
+        >
+          Desempenho
         </TabButton>
         <TabButton
           ativo={tela === 'ajuda'}
@@ -186,6 +193,7 @@ export default function App() {
               reloadKey={reloadConteudos}
             />
           )}
+          {tela === 'desempenho' && <DesempenhoPage />}
           {tela === 'ajuda' && <AjudaPage />}
           {tela === 'registrar' && conteudoAlvo && (
             <RegistrarRevisaoPage

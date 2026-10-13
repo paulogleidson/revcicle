@@ -106,7 +106,7 @@
 ## Backlog V2 (não fazer agora, só registrar)
 - [ ] Grade semanal (dia da semana → matéria)
 - [ ] Notificação via WhatsApp
-- [ ] Gráficos de histórico por conteúdo
+- [x] Gráficos de histórico por conteúdo (E02 + E03 — ver nota 2026-10-13)
 - [ ] Planos pagos (Stripe)
 
 ## Notas / decisões tomadas
@@ -567,3 +567,24 @@ desenvolvimento)
     ícone+texto.
   - Transição explícita: `transition-colors duration-150`.
   - Build final: 70 módulos, CSS 17.2kB.
+- 2026-10-13 — Tela de Desempenho (entregas E02 + E03 do relatório de GP):
+  - **Backend**: `GET /metricas` (`backend/app/routers/metricas.py`) devolve
+    três agregações calculadas em `app/services/metricas.py`
+    (`agregar_metricas`, função pura): `evolucao` (pontos data/percentual
+    por conteúdo, em ordem cronológica), `por_materia` (média e total de
+    revisões, maior média primeiro) e `calendario` (por dia: revisões
+    realizadas + a próxima revisão agendada de cada conteúdo — só a da
+    última sessão, mesma regra do Dashboard). Agregação em Python sobre
+    as sessões do usuário: volume pequeno e fica portátil SQLite/Postgres.
+    5 testes novos em `tests/test_metricas.py` (vazio, ordem, média,
+    calendário substituindo agendamento antigo, isolamento por usuário).
+  - **Frontend**: nova aba "Desempenho" (`pages/DesempenhoPage.jsx`) com
+    3 gráficos em `components/charts/`, todos em SVG/CSS inline — sem
+    biblioteca de gráficos (mesma linha do resto do app: zero dep nova):
+    linha de evolução (seletor de conteúdo, crosshair + tooltip, setas do
+    teclado, grade em 0/70/100% = limites da regra de intervalo, visão em
+    tabela), barras por matéria (valor escrito na ponta) e calendário
+    mensal (ponto cheio = realizada, anel = agendada, detalhe do dia).
+  - Cores das séries em `--color-chart-1` (#3987e5) e `--color-chart-2`
+    (#d95926), validadas contra o fundo dos cards (CVD + contraste).
+  - Nav do shell passou de 3 para 4 abas (`grid-cols-2` no mobile).

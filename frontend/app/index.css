@@ -18,6 +18,10 @@
   --color-status-hoje-fg: #e0b96a;
   --color-status-novo-bg: #2a3a45;
   --color-status-novo-fg: #9cc2e0;
+
+  /* Séries de gráficos — passos escuros validados contra app-surface (CVD + contraste) */
+  --color-chart-1: #3987e5;
+  --color-chart-2: #d95926;
 }
 
 html {

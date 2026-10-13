@@ -5,6 +5,18 @@ export function formatarData(iso) {
   return `${d}/${m}/${y}`
 }
 
+// "2026-07-20" → "20/07"
+export function formatarDiaMes(iso) {
+  const [, m, d] = iso.split('-')
+  return `${d}/${m}`
+}
+
+// "2026-07-20" → número de dias desde a época, para posicionar em escala de tempo.
+export function isoParaDias(iso) {
+  const [y, m, d] = iso.split('-').map(Number)
+  return Date.UTC(y, m - 1, d) / 86400000
+}
+
 // Data local de hoje em ISO "YYYY-MM-DD" (sem UTC).
 export function hojeIsoLocal() {
   const now = new Date()

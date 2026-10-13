@@ -62,3 +62,40 @@ class SessaoRevisaoOut(SessaoRevisaoBase):
 
     class Config:
         from_attributes = True
+
+
+class PontoEvolucaoOut(BaseModel):
+    data: date
+    percentual: float
+
+
+class EvolucaoConteudoOut(BaseModel):
+    conteudo_id: int
+    titulo: str
+    materia: str
+    pontos: list[PontoEvolucaoOut]
+
+
+class MateriaMetricaOut(BaseModel):
+    materia: str
+    media_percentual: float
+    total_revisoes: int
+
+
+class ItemCalendarioOut(BaseModel):
+    conteudo_id: int
+    titulo: str
+    # Preenchido só em revisões realizadas; agendadas ainda não têm resultado.
+    percentual: float | None = None
+
+
+class DiaCalendarioOut(BaseModel):
+    data: date
+    realizadas: list[ItemCalendarioOut]
+    agendadas: list[ItemCalendarioOut]
+
+
+class MetricasOut(BaseModel):
+    evolucao: list[EvolucaoConteudoOut]
+    por_materia: list[MateriaMetricaOut]
+    calendario: list[DiaCalendarioOut]

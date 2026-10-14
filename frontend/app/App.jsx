@@ -35,7 +35,7 @@ function Layout({ children }) {
 
 function TabButton({ ativo, children, onClick }) {
   const base =
-    'h-10 px-4 rounded-lg text-sm font-medium transition text-center'
+    'h-10 px-4 rounded-lg text-sm font-medium transition text-center whitespace-nowrap'
   const estilo = ativo
     ? 'bg-app-fg text-app-bg'
     : 'bg-app-surface text-app-fg border border-app-line hover:bg-app-raised'
@@ -48,7 +48,22 @@ function TabButton({ ativo, children, onClick }) {
 
 function ShellHeader({ email, onSair, tela, setTela }) {
   return (
-    <header className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 mb-6 sm:mb-8">
+    // Marca e usuário numa linha, abas na de baixo: com 4 abas + email não
+    // cabe tudo numa linha só dentro da coluna de 720px.
+    <header className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
+      <div className="flex items-center justify-between gap-4">
+        <BrandRow className="shrink-0" />
+        <div className="flex min-w-0 items-center gap-3 text-sm text-app-muted">
+          <span className="truncate">{email}</span>
+          <button
+            type="button"
+            onClick={onSair}
+            className="underline hover:text-app-fg"
+          >
+            Sair
+          </button>
+        </div>
+      </div>
       <nav className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
         <TabButton
           ativo={tela === 'dashboard'}
@@ -75,16 +90,6 @@ function ShellHeader({ email, onSair, tela, setTela }) {
           Ajuda
         </TabButton>
       </nav>
-      <div className="flex items-center justify-end gap-3 text-sm text-app-muted">
-        <span className="truncate max-w-[240px] sm:max-w-[220px]">{email}</span>
-        <button
-          type="button"
-          onClick={onSair}
-          className="underline hover:text-app-fg"
-        >
-          Sair
-        </button>
-      </div>
     </header>
   )
 }
@@ -170,7 +175,6 @@ export default function App() {
   if (session) {
     return (
       <Layout>
-        <BrandRow className="mb-4 sm:mb-6" />
         <ShellHeader
           email={session.user.email}
           onSair={sair}

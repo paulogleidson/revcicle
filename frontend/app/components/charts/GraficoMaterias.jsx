@@ -1,6 +1,4 @@
-function formatarPct(v) {
-  return `${Number.isInteger(v) ? v : v.toFixed(1)}%`
-}
+import { formatarPct } from '../../lib/formatos'
 
 // Barras horizontais de 0 a 100%: cada matéria tem o valor escrito na ponta,
 // então nenhum número depende de hover para ser lido.

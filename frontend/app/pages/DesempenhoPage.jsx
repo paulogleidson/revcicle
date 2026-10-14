@@ -5,6 +5,7 @@ import GraficoEvolucao from '../components/charts/GraficoEvolucao'
 import GraficoMaterias from '../components/charts/GraficoMaterias'
 import { apiGet } from '../lib/api'
 import { formatarData } from '../lib/dates'
+import { formatarPct } from '../lib/formatos'
 
 function Secao({ titulo, subtitulo, acao, children }) {
   return (
@@ -80,7 +81,7 @@ function Evolucao({ evolucao }) {
             {serie.pontos.map((p, i) => (
               <tr key={i} className="border-b border-app-line last:border-0 text-app-fg">
                 <td className="py-2 tabular-nums">{formatarData(p.data)}</td>
-                <td className="py-2 text-right tabular-nums">{p.percentual}%</td>
+                <td className="py-2 text-right tabular-nums">{formatarPct(p.percentual)}</td>
               </tr>
             ))}
           </tbody>

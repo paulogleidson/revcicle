@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { formatarData, hojeIsoLocal, isoParaDias } from '../../lib/dates'
+import { formatarPct } from '../../lib/formatos'
 
 const MESES = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -46,7 +47,7 @@ function DetalheDia({ data, info, hoje }) {
             <li key={`r${i}`} className="flex items-center gap-2 text-app-fg">
               <span className="w-2 h-2 rounded-full bg-chart-1 shrink-0" />
               <span className="truncate">{r.titulo}</span>
-              <span className="ml-auto font-medium tabular-nums">{r.percentual}%</span>
+              <span className="ml-auto font-medium tabular-nums">{formatarPct(r.percentual)}</span>
             </li>
           ))}
         </ul>

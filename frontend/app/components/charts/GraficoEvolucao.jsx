@@ -1,15 +1,12 @@
 import { useState } from 'react'
-import { formatarData, formatarDiaMes, isoParaDias } from '../../lib/dates'
+import { formatarData, formatarDiaMes } from '../../lib/dates'
+import { formatarPct } from '../../lib/formatos'
 import { useLargura } from '../../lib/useLargura'
 
 const ALTURA = 220
-const MARGEM = { topo: 14, direita: 48, base: 28, esquerda: 44 }
+const MARGEM = { topo: 14, direita: 52, base: 28, esquerda: 44 }
 // 70% e 100% são os limites da regra de intervalo (+1 / +7 / +30 dias).
 const TICKS_Y = [0, 70, 100]
-
-function formatarPct(v) {
-  return `${Number.isInteger(v) ? v : v.toFixed(1)}%`
-}
 
 export default function GraficoEvolucao({ pontos }) {
   const [ref, largura] = useLargura()
@@ -18,14 +15,13 @@ export default function GraficoEvolucao({ pontos }) {
   const plotL = Math.max(largura - MARGEM.esquerda - MARGEM.direita, 0)
   const plotA = ALTURA - MARGEM.topo - MARGEM.base
 
-  const dias = pontos.map((p) => isoParaDias(p.data))
-  const min = Math.min(...dias)
-  const max = Math.max(...dias)
-  const x = (d) =>
-    MARGEM.esquerda + (max === min ? plotL / 2 : ((d - min) / (max - min)) * plotL)
+  // Eixo X por ordem da revisão, não por data: os intervalos crescem
+  // (1 → 7 → 30 dias) e revisões do mesmo dia ficariam empilhadas numa escala de tempo.
+  const n = pontos.length
+  const x = (i) => MARGEM.esquerda + (n === 1 ? plotL / 2 : (i / (n - 1)) * plotL)
   const y = (v) => MARGEM.topo + plotA - (v / 100) * plotA
 
-  const coords = pontos.map((p, i) => ({ ...p, cx: x(dias[i]), cy: y(p.percentual) }))
+  const coords = pontos.map((p, i) => ({ ...p, cx: x(i), cy: y(p.percentual) }))
   const caminho = coords.map((c, i) => `${i ? 'L' : 'M'}${c.cx},${c.cy}`).join(' ')
   const ultimo = coords[coords.length - 1]
 
@@ -88,7 +84,7 @@ export default function GraficoEvolucao({ pontos }) {
           >
             {formatarDiaMes(coords[0].data)}
           </text>
-          {coords.length > 1 && max !== min && (
+          {coords.length > 1 && (
             <text
               x={ultimo.cx}
               y={ALTURA - 8}

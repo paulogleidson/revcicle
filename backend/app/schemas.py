@@ -1,6 +1,7 @@
 from datetime import date, datetime
+from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StringConstraints
 
 
 class UsuarioBase(BaseModel):
@@ -99,3 +100,71 @@ class MetricasOut(BaseModel):
     evolucao: list[EvolucaoConteudoOut]
     por_materia: list[MateriaMetricaOut]
     calendario: list[DiaCalendarioOut]
+
+
+# --- Comunidade v1 ---------------------------------------------------------
+
+# Letras (com acento), números, espaço, ponto, hífen e underline.
+Apelido = Annotated[
+    str, StringConstraints(strip_whitespace=True, min_length=3, max_length=30, pattern=r"^[\w .-]+$")
+]
+TextoPost = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=1000)]
+TextoComentario = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=500)]
+
+
+class PerfilIn(BaseModel):
+    apelido: Apelido
+
+
+class PerfilOut(BaseModel):
+    usuario_id: int
+    apelido: str
+    criado_em: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class PerfilPublicoOut(BaseModel):
+    usuario_id: int
+    apelido: str
+    membro_desde: datetime
+    total_posts: int
+    # Matérias que o usuário logado e este perfil têm em comum nos conteúdos.
+    disciplinas_em_comum: list[str]
+
+
+class AutorOut(BaseModel):
+    usuario_id: int
+    apelido: str
+
+
+class PostIn(BaseModel):
+    texto: TextoPost
+
+
+class PostOut(BaseModel):
+    id: int
+    autor: AutorOut
+    texto: str
+    criado_em: datetime
+    total_comentarios: int
+    # True quando o post é do usuário logado (front mostra "apagar").
+    meu: bool
+
+
+class ComentarioIn(BaseModel):
+    texto: TextoComentario
+
+
+class ComentarioOut(BaseModel):
+    id: int
+    post_id: int
+    autor: AutorOut
+    texto: str
+    criado_em: datetime
+    meu: bool
+
+
+class PostDetalheOut(PostOut):
+    comentarios: list[ComentarioOut]

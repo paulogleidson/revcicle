@@ -58,3 +58,49 @@ class SessaoRevisao(Base):
     proxima_revisao: Mapped[date] = mapped_column(Date, nullable=False, index=True)
 
     conteudo: Mapped["Conteudo"] = relationship(back_populates="sessoes")
+
+
+# --- Comunidade v1 ---------------------------------------------------------
+# Participar é opcional: só quem cria um perfil (apelido) aparece para os
+# outros. O email nunca é exposto na comunidade.
+
+
+class Perfil(Base):
+    __tablename__ = "perfis"
+
+    usuario_id: Mapped[int] = mapped_column(
+        ForeignKey("usuarios.id", ondelete="CASCADE"), primary_key=True
+    )
+    apelido: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
+
+
+class Post(Base):
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    usuario_id: Mapped[int] = mapped_column(
+        ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    texto: Mapped[str] = mapped_column(String, nullable=False)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
+
+    comentarios: Mapped[list["Comentario"]] = relationship(
+        back_populates="post", cascade="all, delete-orphan"
+    )
+
+
+class Comentario(Base):
+    __tablename__ = "comentarios"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    post_id: Mapped[int] = mapped_column(
+        ForeignKey("posts.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    usuario_id: Mapped[int] = mapped_column(
+        ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    texto: Mapped[str] = mapped_column(String, nullable=False)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
+
+    post: Mapped["Post"] = relationship(back_populates="comentarios")

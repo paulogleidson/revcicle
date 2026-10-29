@@ -44,6 +44,40 @@ CREATE INDEX IF NOT EXISTS idx_sessoes_conteudo_id
 CREATE INDEX IF NOT EXISTS idx_sessoes_proxima_revisao
     ON sessoes_revisao (proxima_revisao);
 
+-- Comunidade v1 — só quem cria perfil (apelido) participa; email nunca aparece.
+CREATE TABLE IF NOT EXISTS perfis (
+    usuario_id  INTEGER PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
+    apelido     TEXT    NOT NULL UNIQUE,
+    criado_em   TIMESTAMP NOT NULL DEFAULT now()
+);
+
+-- Unicidade sem diferenciar maiúsculas (o backend também checa antes).
+CREATE UNIQUE INDEX IF NOT EXISTS idx_perfis_apelido_lower
+    ON perfis (lower(apelido));
+
+CREATE TABLE IF NOT EXISTS posts (
+    id          SERIAL PRIMARY KEY,
+    usuario_id  INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    texto       TEXT    NOT NULL,
+    criado_em   TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_posts_usuario_id
+    ON posts (usuario_id);
+
+CREATE TABLE IF NOT EXISTS comentarios (
+    id          SERIAL PRIMARY KEY,
+    post_id     INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+    usuario_id  INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    texto       TEXT    NOT NULL,
+    criado_em   TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_comentarios_post_id
+    ON comentarios (post_id);
+CREATE INDEX IF NOT EXISTS idx_comentarios_usuario_id
+    ON comentarios (usuario_id);
+
 -- Row Level Security — fecha o acesso via PostgREST/anon key.
 -- Todo o CRUD passa pelo FastAPI, que conecta via role postgres (BYPASSRLS),
 -- entao RLS ligada sem policies = frontend nao consegue bater direto no
@@ -52,3 +86,6 @@ CREATE INDEX IF NOT EXISTS idx_sessoes_proxima_revisao
 ALTER TABLE usuarios         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE conteudos        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessoes_revisao  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE perfis           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE posts            ENABLE ROW LEVEL SECURITY;
+ALTER TABLE comentarios      ENABLE ROW LEVEL SECURITY;

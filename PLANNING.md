@@ -107,6 +107,7 @@
 - [ ] Grade semanal (dia da semana → matéria)
 - [ ] Notificação via WhatsApp
 - [x] Gráficos de histórico por conteúdo (E02 + E03 — ver nota 2026-10-13)
+- [ ] Comunidade v1 (E04) — backend pronto (A08, nota 2026-10-28); falta frontend e moderação
 - [ ] Planos pagos (Stripe)
 
 ## Notas / decisões tomadas
@@ -588,3 +589,26 @@ desenvolvimento)
   - Cores das séries em `--color-chart-1` (#3987e5) e `--color-chart-2`
     (#d95926), validadas contra o fundo dos cards (CVD + contraste).
   - Nav do shell passou de 3 para 4 abas (`grid-cols-2` no mobile).
+- 2026-10-28 — Backend da Comunidade v1 (atividade A08 do cronograma de GP):
+  - **Tabelas novas** (`perfis`, `posts`, `comentarios`), todas com FK
+    `ON DELETE CASCADE` para `usuarios` e RLS ligada (mesmo esquema das
+    outras: backend acessa como postgres). Migração em `backend/schema.sql`
+    — rodar no SQL editor do Supabase ANTES do deploy (só as rotas
+    `/comunidade` dependem delas; as telas antigas não quebram sem isso).
+  - **Participação opcional via perfil**: só quem cria um apelido
+    (`PUT /comunidade/perfil`, 3–30 caracteres, único sem diferenciar
+    maiúsculas) posta/comenta e aparece para os outros. Email nunca é
+    exposto. Ler o feed não exige perfil.
+  - **Rotas** (`app/routers/comunidade.py`): `GET/PUT /comunidade/perfil`,
+    `GET /comunidade/usuarios/{id}` (apelido, membro desde, total de posts,
+    disciplinas em comum), `GET/POST /comunidade/posts` (feed mais recente
+    primeiro, paginação por `antes_de` + `limite`), `GET/DELETE
+    /comunidade/posts/{id}`, `POST /comunidade/posts/{id}/comentarios`,
+    `DELETE /comunidade/comentarios/{id}`. Apagar só pelo autor (403 para
+    alheio — post é público, não há existência a esconder).
+  - **Disciplinas em comum** derivadas de `conteudos.materia` — sem tabela
+    nova. Comparação normalizada (sem acento/caixa/espaços extras) em
+    `app/services/comunidade.py` (função pura); devolve a grafia de quem
+    está vendo.
+  - 23 testes novos em `tests/test_comunidade.py` (72 no total).
+  - Fica para depois: frontend (A09) e moderação manual básica (A10).

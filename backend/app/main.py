@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.database import engine
-from app.routers import conteudos, metricas, sessoes
+from app.routers import comunidade, conteudos, metricas, sessoes
 
 app = FastAPI(title="Revisão Estudos API", version="0.1.0")
 
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(conteudos.router)
 app.include_router(sessoes.router)
 app.include_router(metricas.router)
+app.include_router(comunidade.router)
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
